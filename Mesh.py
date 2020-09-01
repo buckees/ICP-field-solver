@@ -20,8 +20,8 @@ class MESHGRID(object):
     def __init__(self, width, height, nx, ny):
         self.width = width # domain width in x direction
         self.height = height # domain height in z direction
-        self.nx = nx # resolution in x direction
-        self.ny = ny # resolution in z direction
+        self.nx = nx # nodes in x direction
+        self.ny = ny # nodes in z direction
         
         self.posx = np.linspace(-width/2.0, width/2.0, nx)
         self.posy = np.linspace(-width/2.0, width/2.0, nx)
@@ -45,7 +45,8 @@ class MESHGRID(object):
     def plot_mesh(self):
         plt.plot(self.posx, self.posy, '.k')
     
-    def calc_dist(self, point):
+    def calc_dist(self, point, I):
+        sign = np.sign(I)
         x0, y0 = point
         distx = self.posx - x0
         disty = self.posy - y0
@@ -54,7 +55,7 @@ class MESHGRID(object):
                           out=np.zeros_like(dist))
         disty = np.divide(disty, dist, where=dist > 0.0,
                           out=np.zeros_like(dist))
-        vecx, vecy = rotate(distx, disty, pi/2.0)
+        vecx, vecy = rotate(distx, disty, sign*pi/2.0)
         return dist, vecx, vecy
 
 def rotate(vecx, vecy, angle):
